@@ -11,27 +11,44 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* ใช้ min-height แทน height เพื่อให้เนื้อหายืดได้ */
+            min-height: 100vh;
             margin: 0;
-            padding: 20px; /* เพิ่ม padding เพื่อไม่ให้เนื้อหาชิดขอบจอ */
-            box-sizing: border-box; /* ทำให้ padding ไม่เพิ่มขนาดรวมของ body */
+            padding: 0; /* ลบ padding ออกเพื่อให้ content ชิดขอบมากขึ้น */
+            box-sizing: border-box;
         }
         .container {
             text-align: center;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 0; /* ลบ border-radius บนมือถือ */
             background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            max-width: 90%; /* จำกัดความกว้างสูงสุดให้เหมาะกับมือถือ */
-            width: 400px; /* กำหนดความกว้างคงที่บนหน้าจอใหญ่ */
+            box-shadow: none; /* ลบ box-shadow บนมือถือ */
+            max-width: 100%; /* ทำให้ container เต็มความกว้างของหน้าจอ */
+            width: 100%; /* ใช้ความกว้างเต็มที่ */
+            min-height: 100vh; /* ทำให้ container ยืดเต็มความสูงหน้าจอ */
         }
+
+        /* ใช้ Media Query สำหรับหน้าจอ Desktop */
+        @media (min-width: 768px) {
+            .container {
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                max-width: 400px;
+                width: 400px;
+                min-height: auto;
+            }
+            body {
+                padding: 20px;
+            }
+        }
+
         h1 {
             color: #333;
         }
         input[type="text"] {
             padding: 10px;
-            width: 100%; /* ปรับความกว้างให้เต็มพื้นที่ container */
-            max-width: 250px; /* จำกัดความกว้างสูงสุด */
+            width: 100%;
+            max-width: 250px;
             margin-top: 20px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -61,7 +78,7 @@
             justify-content: center;
         }
         #secretImage {
-            max-width: 100%; /* รูปภาพจะปรับขนาดตาม container */
+            max-width: 100%;
             height: auto;
             border-radius: 10px;
         }
