@@ -61,10 +61,18 @@
             width: 400px;
             border-radius: 10px;
         }
+        /* Style for the new pic3 image */
+        .header-image {
+            max-width: 150px; /* Adjust size as needed */
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <img src="pic1.png" alt="A mystery image" class="header-image">
         <h1>รหัสลับ</h1>
         <input type="text" id="secretCode" placeholder="พิมพ์รหัสที่นี่">
         <button onclick="checkCode()">ส่งข้อความ</button>
@@ -101,12 +109,6 @@
                 responseElement.textContent = "รหัสไม่ถูกต้อง";
                 responseElement.style.color = 'red';
             }
-        }
-
-        function resetPage() {
-            document.getElementById('secretCode').value = '';
-            document.getElementById('response').textContent = '';
-            document.getElementById('secretImage').style.display = 'none';
         }
     </script>
 </body>
