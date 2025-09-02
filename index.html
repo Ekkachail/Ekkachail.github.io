@@ -49,7 +49,6 @@
             margin-top: 20px;
             font-size: 20px;
             font-weight: bold;
-            color: green;
         }
     </style>
 </head>
@@ -59,17 +58,29 @@
         <input type="text" id="secretCode" placeholder="พิมพ์รหัสลับที่นี่">
         <button onclick="checkCode()">ส่งข้อความ</button>
         <p id="response"></p>
+        <img id="secretImage" src="" alt="รูปภาพลับ" style="display: none;">
     </div>
     <script>
         function checkCode() {
             const inputElement = document.getElementById('secretCode');
             const responseElement = document.getElementById('response');
+            const imageElement = document.getElementById('secretImage');
             const code = inputElement.value;
 
-            if (code === "1234") {
-                responseElement.textContent = "ใช่แล้ว";
+            // ซ่อนข้อความและรูปภาพทั้งหมดก่อน
+            responseElement.textContent = "";
+            imageElement.style.display = 'none';
+
+            if (code === "2143") {
+                // ถ้าหากรหัสถูกต้อง
+                responseElement.textContent = "รหัสถูกต้อง";
+                responseElement.style.color = 'green';
+                imageElement.src = "https://picsum.photos/600/400"; // เปลี่ยน URL นี้เป็นรูปภาพของคุณ
+                imageElement.style.display = 'block'; // แสดงรูปภาพ
             } else {
+                // ถ้าหากรหัสไม่ถูกต้อง
                 responseElement.textContent = "รหัสไม่ถูกต้อง";
+                responseElement.style.color = 'red';
             }
         }
     </script>
