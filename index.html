@@ -50,6 +50,14 @@
             font-size: 20px;
             font-weight: bold;
         }
+        #imageContainer {
+            margin-top: 20px;
+        }
+        #secretImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +66,9 @@
         <input type="text" id="secretCode" placeholder="พิมพ์รหัสลับที่นี่">
         <button onclick="checkCode()">ส่งข้อความ</button>
         <p id="response"></p>
-        <img id="secretImage" src="" alt="รูปภาพลับ" style="display: none;">
+        <div id="imageContainer">
+            <img id="secretImage" src="" alt="รูปภาพลับ" style="display: none;">
+        </div>
     </div>
     <script>
         function checkCode() {
@@ -72,13 +82,19 @@
             imageElement.style.display = 'none';
 
             if (code === "2143") {
-                // ถ้าหากรหัสถูกต้อง
+                // ถ้ารหัสเป็น 2143
                 responseElement.textContent = "รหัสถูกต้อง";
                 responseElement.style.color = 'green';
-                imageElement.src = "https://nu365-my.sharepoint.com/:i:/g/personal/ekkachail_nu_ac_th/EYCAdh4vHl9Jlc-gc7R879sBOVOxEU5_j3HQG4lRCQlLvg?e=w1Prrs"; // เปลี่ยน URL นี้เป็นรูปภาพของคุณ
+                imageElement.src = "pic1.jpg"; // เปลี่ยนเป็น URL หรือชื่อไฟล์รูปภาพ pic1 ของคุณ
+                imageElement.style.display = 'block'; // แสดงรูปภาพ
+            } else if (code === "0001") {
+                // ถ้ารหัสเป็น 0001
+                responseElement.textContent = "รหัสถูกต้อง";
+                responseElement.style.color = 'green';
+                imageElement.src = "pic2.jpg"; // เปลี่ยนเป็น URL หรือชื่อไฟล์รูปภาพ pic2 ของคุณ
                 imageElement.style.display = 'block'; // แสดงรูปภาพ
             } else {
-                // ถ้าหากรหัสไม่ถูกต้อง
+                // ถ้ารหัสไม่ถูกต้อง
                 responseElement.textContent = "รหัสไม่ถูกต้อง";
                 responseElement.style.color = 'red';
             }
