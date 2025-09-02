@@ -52,12 +52,12 @@
         }
         #imageContainer {
             margin-top: 20px;
-            display: flex; /* ใช้ flexbox เพื่อจัดกึ่งกลางรูปภาพ */
-            justify-content: center; /* จัดกึ่งกลางตามแนวนอน */
+            display: flex;
+            justify-content: center;
         }
         #secretImage {
-            max-width: 70%; 
-            height: auto; 
+            max-width: 60%;
+            height: auto;
             width: 400px;
             border-radius: 10px;
         }
@@ -81,10 +81,14 @@
             const imageElement = document.getElementById('secretImage');
             const code = inputElement.value;
 
+            // ซ่อนข้อความและรูปภาพทั้งหมดก่อน
             responseElement.textContent = "";
             imageElement.style.display = 'none';
 
-            if (code === "2143") {
+            // สร้าง array ที่เก็บรหัสลับสำหรับ pic1
+            const pic1Codes = ["2143", "1111", "9876"];
+
+            if (pic1Codes.includes(code)) {
                 responseElement.textContent = "รหัสถูกต้อง";
                 responseElement.style.color = 'green';
                 imageElement.src = "pic1.png";
