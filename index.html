@@ -52,12 +52,13 @@
         }
         #imageContainer {
             margin-top: 20px;
+            display: flex; /* ใช้ flexbox เพื่อจัดกึ่งกลางรูปภาพ */
+            justify-content: center; /* จัดกึ่งกลางตามแนวนอน */
         }
-        /* กำหนดขนาดรูปภาพที่นี่ */
         #secretImage {
-            max-width: 60%; /* เพื่อให้รูปภาพไม่เกินขนาดของ Container */
-            height: auto;   /* เพื่อรักษาสัดส่วนของรูปภาพ */
-            width: 400px;  /* กำหนดความกว้างเป็น 400px */
+            max-width: 70%; 
+            height: auto; 
+            width: 400px;
             border-radius: 10px;
         }
     </style>
@@ -71,6 +72,7 @@
         <div id="imageContainer">
             <img id="secretImage" src="" alt="รูปภาพลับ" style="display: none;">
         </div>
+        <button onclick="resetPage()">ส่งรหัสใหม่</button>
     </div>
     <script>
         function checkCode() {
@@ -79,24 +81,29 @@
             const imageElement = document.getElementById('secretImage');
             const code = inputElement.value;
 
-            // ซ่อนข้อความและรูปภาพทั้งหมดก่อน
             responseElement.textContent = "";
             imageElement.style.display = 'none';
 
             if (code === "2143") {
                 responseElement.textContent = "รหัสถูกต้อง";
                 responseElement.style.color = 'green';
-                imageElement.src = "pic1.png"; // ตัวอย่าง URL รูปภาพ
+                imageElement.src = "pic1.png";
                 imageElement.style.display = 'block';
             } else if (code === "0001") {
                 responseElement.textContent = "รหัสถูกต้อง";
                 responseElement.style.color = 'green';
-                imageElement.src = "pic2.png"; // ตัวอย่าง URL รูปภาพ
+                imageElement.src = "pic2.png";
                 imageElement.style.display = 'block';
             } else {
                 responseElement.textContent = "รหัสไม่ถูกต้อง";
                 responseElement.style.color = 'red';
             }
+        }
+
+        function resetPage() {
+            document.getElementById('secretCode').value = '';
+            document.getElementById('response').textContent = '';
+            document.getElementById('secretImage').style.display = 'none';
         }
     </script>
 </body>
