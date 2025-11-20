@@ -114,6 +114,11 @@
             const pic1Codes = ["5438", "111001", "980076"];
             const wrongCodesImages = ["pic1.JPG", "pic2.JPG", "pic3.JPG"];
 
+            function getRandomWrongImage() {
+                const randomIndex = Math.floor(Math.random() * wrongCodesImages.length);
+                return wrongCodesImages[randomIndex];
+            }
+
             if (pic1Codes.includes(code)) {
                 responseElement.textContent = "รหัสถูกต้อง";
                 responseElement.style.color = 'green';
