@@ -112,7 +112,7 @@
             imageElement.style.display = 'none';
 
             const pic1Codes = ["5438", "111001", "980076"];
-            const wrongCodesImages = ["pic1.JPG", "pic2.JPG", "pic3.JPG"];
+            const wrongCodesImages = ["00jpg","pic1.JPG", "pic2.JPG", "pic3.JPG"];
 
             function getRandomWrongImage() {
                 const randomIndex = Math.floor(Math.random() * wrongCodesImages.length);
@@ -152,7 +152,7 @@
             } else {
                 responseElement.textContent = "รหัสไม่ถูกต้อง";
                 responseElement.style.color = 'red';
-                imageElement.src = "00.jpg";
+                imageElement.src = getRandomWrongImage();
                 imageElement.style.display = 'block';  
             }
         }
