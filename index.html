@@ -113,10 +113,16 @@
 
             const pic1Codes = ["5438", "1111", "111001", "980076"];
             const wrongCodesImages = ["00.jpg", "pic1.JPG", "pic2.JPG", "pic3.JPG"];
+            const wrongCodesTexts = ["ไม่ถูกเน้อ", "ผิดอยู่เด้อ", "ไม่ใช่ป่าว", "อาจจะยังเน้อ"];
 
             function getRandomWrongImage() {
                 const randomIndex = Math.floor(Math.random() * wrongCodesImages.length);
                 return wrongCodesImages[randomIndex];
+            }
+
+            function getRandomWrongText() {
+                const randomIndexx = Math.floor(Math.random() * wrongCodesTexts.length);
+                return wrongCodesTexts[randomIndexx];
             }
 
             if (pic1Codes.includes(code)) {
@@ -150,7 +156,7 @@
                 imageElement.src = "pic6.png";
                 imageElement.style.display = 'block';    
             } else {
-                responseElement.textContent = "รหัสไม่ถูกต้อง";
+                responseElement.textContent = getRandomWrongText();
                 responseElement.style.color = 'red';
                 imageElement.src = getRandomWrongImage();
                 imageElement.style.display = 'block';  
