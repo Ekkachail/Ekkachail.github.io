@@ -112,7 +112,7 @@
             imageElement.style.display = 'none';
 
             const pic1Codes = ["7894", "11x11", "1110xx01", "9800xx76"];
-            const wrongCodesImages = ["00.jpg", "pic1.JPG", "pic2.JPG", "pic3.JPG"];
+            const wrongCodesImages = ["00.jpg", "000.jpg"];
             const wrongCodesTexts = ["ไม่ถูกเน้อ", "ผิดอยู่เด้อ", "ไม่ใช่ป่าว", "อาจจะยังน้าาาาา", "คิดดีๆ น้าอ้วน", "อ้วนแน่ใจหรอ"];
             const TrueCodesTexts = ["ถูกต้องครับ", "เก่งมากครับ", "รหัสถูกต้อง", "ใช่แล้วจ้าาา"];
 
@@ -134,27 +134,27 @@
             if (pic1Codes.includes(code)) {
                 responseElement.textContent = getRandomTrueText();
                 responseElement.style.color = 'green';
-                imageElement.src = "00.jpg";
+                imageElement.src = "Kakuro7894.jpg";
                 imageElement.style.display = 'block';
             } else if (code === "1144") {
                 responseElement.textContent = getRandomTrueText();
                 responseElement.style.color = 'green';
-                imageElement.src = "00.jpg";
+                imageElement.src = "Updown1144.jpg";
                 imageElement.style.display = 'block';  
             } else if (code === "7353") {
                 responseElement.textContent = getRandomTrueText();
                 responseElement.style.color = 'green';
-                imageElement.src = "00.jpg";
+                imageElement.src = "7353.jpg";
                 imageElement.style.display = 'block';    
             } else if (code === "4896") {
                 responseElement.textContent = getRandomTrueText();
                 responseElement.style.color = 'green';
-                imageElement.src = "00.jpg";
+                imageElement.src = "4896.jpg";
                 imageElement.style.display = 'block';
-            } else if (code === "xx0xx146") {
-                responseElement.textContent = "รหัสถูกต้อง";
+            } else if (code === "4321") {
+                responseElement.textContent = "แค่ทดสอบนะครับ";
                 responseElement.style.color = 'green';
-                imageElement.src = "00.jpg";
+                imageElement.src = "000.jpg";
                 imageElement.style.display = 'block';    
             } else if (code === "xxxx2x859") {
                 responseElement.textContent = "รหัสถูกต้อง";
