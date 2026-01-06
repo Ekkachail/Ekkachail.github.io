@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปผลแบบประเมินโครงการ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            body { background-color: white; }
+            .shadow-lg { box-shadow: none !important; }
+            .border { border: 1px solid #000 !important; }
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <!-- Control Panel -->
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8 no-print">
+        <h1 class="text-2xl font-bold text-blue-800 mb-4">เครื่องมือสรุปผลแบบประเมิน (อัตโนมัติ)</h1>
+        <p class="mb-4 text-gray-600">อัปโหลดไฟล์ CSV จาก Google Forms เพื่อสร้างรายงานสรุปผลทันที</p>
+        
+        <div class="flex items-center justify-center w-full">
+            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                    </svg>
+                    <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">คลิกเพื่อเลือกไฟล์</span> หรือลากไฟล์มาวางที่นี่</p>
+                    <p class="text-xs text-gray-500">รองรับไฟล์ .csv (Encoding UTF-8)</p>
+                </div>
+                <input id="dropzone-file" type="file" class="hidden" accept=".csv" />
+            </label>
+        </div>
+        <div id="error-msg" class="hidden mt-4 p-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert"></div>
+    </div>
+
+    <!-- Report Output -->
+    <div id="report-container" class="max-w-5xl mx-auto bg-white p-8 rounded-lg shadow-lg hidden min-h-screen">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">สรุปผลการประเมินโครงการ</h2>
+            <p id="total-respondents" class="text-gray-600 mt-2">จำนวนผู้ตอบแบบสอบถามทั้งหมด: - คน</p>
+        </div>
+
+        <!-- Section 1: General Info -->
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-gray-800 border-l-4 border-blue-500 pl-3 mb-4">ส่วนที่ 1: ข้อมูลทั่วไป</h3>
+            <div id="general-tables"></div>
+        </div>
+
+        <!-- Section 2: Satisfaction -->
+        <div class="mb-8 page-break">
+            <h3 class="text-lg font-bold text-gray-800 border-l-4 border-blue-500 pl-3 mb-4">ส่วนที่ 2: ความพึงพอใจต่อโครงการ</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse border border-gray-300">
+                    <thead class="bg-blue-50">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left w-1/2">รายการประเมิน</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center w-24">ค่าเฉลี่ย (<span class="italic">x̄</span>)</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center w-24">S.D.</th>
+                            <th class="border border-gray-300 px-4 py-2 text-center w-32">การแปลผล</th>
+                        </tr>
+                    </thead>
+                    <tbody id="satisfaction-body"></tbody>
+                </table>
+            </div>
+            <div class="mt-2 text-xs text-gray-500">
+                *เกณฑ์การแปลผล: 1.00-1.80=น้อยที่สุด, 1.81-2.60=น้อย, 2.61-3.40=ปานกลาง, 3.41-4.20=มาก, 4.21-5.00=มากที่สุด
+            </div>
+        </div>
+
+        <!-- Section 3: Other Stats -->
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-gray-800 border-l-4 border-blue-500 pl-3 mb-4">ส่วนที่ 3: ความคิดเห็นเพิ่มเติม (เชิงปริมาณ)</h3>
+            <div id="other-tables"></div>
+        </div>
+
+        <!-- Section 4: Suggestions -->
+        <div class="mb-8">
+            <h3 class="text-lg font-bold text-gray-800 border-l-4 border-blue-500 pl-3 mb-4">ส่วนที่ 4: ข้อเสนอแนะอื่น ๆ</h3>
+            <div class="bg-gray-50 rounded p-4 border border-gray-200">
+                <ul id="comments-list" class="list-disc list-inside space-y-2 text-gray-700"></ul>
+            </div>
+        </div>
+
+        <div class="text-center no-print mt-10">
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow transition">
+                พิมพ์รายงาน / บันทึกเป็น PDF
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('dropzone-file').addEventListener('change', handleFileSelect, false);
+
+        function handleFileSelect(evt) {
+            const file = evt.target.files[0];
+            if (!file) return;
+
+            Papa.parse(file, {
+                header: false, // Use index based to be safer with duplicate headers or encoding issues
+                skipEmptyLines: true,
+                complete: function(results) {
+                    try {
+                        generateReport(results.data);
+                        document.getElementById('report-container').classList.remove('hidden');
+                        document.getElementById('error-msg').classList.add('hidden');
+                    } catch (e) {
+                        console.error(e);
+                        const errorDiv = document.getElementById('error-msg');
+                        errorDiv.textContent = "เกิดข้อผิดพลาดในการประมวลผลไฟล์: " + e.message + " กรุณาตรวจสอบว่าไฟล์ CSV ถูกต้อง";
+                        errorDiv.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+        function generateReport(data) {
+            // Remove header row
+            const headers = data[0];
+            const rows = data.slice(1);
+            const totalRespondents = rows.length;
+
+            // Update Total Count
+            document.getElementById('total-respondents').textContent = `จำนวนผู้ตอบแบบสอบถามทั้งหมด: ${totalRespondents} คน`;
+
+            // Configuration based on provided snippet structure
+            // Index 0: Timestamp
+            // Index 1: เพศ
+            // Index 2: สาขาวิชา
+            // Index 3-10: Rating Questions (1-5)
+            // Index 11: ระยะเวลา (เหมาะสม/ไม่)
+            // Index 12: ควรจัดอีกไหม (ควร/ไม่ควร)
+            // Index 13: ข้อเสนอแนะ
+
+            // --- Part 1 & 3: Categorical Tables Helper ---
+            function createCategoricalTable(colIndex, title) {
+                const counts = {};
+                rows.forEach(row => {
+                    const val = row[colIndex] ? row[colIndex].trim() : "ไม่ระบุ";
+                    counts[val] = (counts[val] || 0) + 1;
+                });
+
+                let html = `
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-gray-700 mb-2">${title}</h4>
+                        <table class="min-w-full border-collapse border border-gray-300 text-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="border border-gray-300 px-4 py-2 text-left">รายการ</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-center w-32">จำนวน (คน)</th>
+                                    <th class="border border-gray-300 px-4 py-2 text-center w-32">ร้อยละ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="font-semibold bg-gray-50">
+                                    <td class="border border-gray-300 px-4 py-2">รวมทั้งหมด</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center">${totalRespondents}</td>
+                                    <td class="border border-gray-300 px-4 py-2 text-center">100.00</td>
+                                </tr>
+                `;
+
+                for (const [key, value] of Object.entries(counts)) {
+                    const percent = ((value / totalRespondents) * 100).toFixed(2);
+                    html += `
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">${key}</td>
+                            <td class="border border-gray-300 px-4 py-2 text-center">${value}</td>
+                            <td class="border border-gray-300 px-4 py-2 text-center">${percent}</td>
+                        </tr>
+                    `;
+                }
+                html += `</tbody></table></div>`;
+                return html;
+            }
+
+            // Generate General Info Tables (Gender, Major)
+            let generalHtml = "";
+            generalHtml += createCategoricalTable(1, headers[1] || "เพศ");
+            generalHtml += createCategoricalTable(2, headers[2] || "สาขาวิชา");
+            document.getElementById('general-tables').innerHTML = generalHtml;
+
+             // Generate Other Stats Tables (Time, Future)
+            let otherHtml = "";
+            otherHtml += createCategoricalTable(11, headers[11] || "ความเหมาะสมของระยะเวลา");
+            otherHtml += createCategoricalTable(12, headers[12] || "ความต้องการให้จัดกิจกรรมอีก");
+            document.getElementById('other-tables').innerHTML = otherHtml;
+
+
+            // --- Part 2: Satisfaction (Mean/SD) ---
+            const ratingIndices = [3, 4, 5, 6, 7, 8, 9, 10]; // Columns with 1-5 ratings
+            let satisfactionHtml = "";
+
+            ratingIndices.forEach(idx => {
+                const question = headers[idx];
+                const scores = rows.map(r => parseFloat(r[idx])).filter(n => !isNaN(n));
+                
+                if (scores.length === 0) return;
+
+                const n = scores.length;
+                const sum = scores.reduce((a, b) => a + b, 0);
+                const mean = sum / n;
+                
+                const variance = scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / (n - 1); // Sample SD
+                const sd = Math.sqrt(variance || 0); // Handle case if n=1
+
+                let interpretation = "";
+                if (mean <= 1.80) interpretation = "น้อยที่สุด";
+                else if (mean <= 2.60) interpretation = "น้อย";
+                else if (mean <= 3.40) interpretation = "ปานกลาง";
+                else if (mean <= 4.20) interpretation = "มาก";
+                else interpretation = "มากที่สุด";
+
+                satisfactionHtml += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">${question}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">${mean.toFixed(2)}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">${sd.toFixed(2)}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center font-medium ${getColorClass(mean)}">${interpretation}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('satisfaction-body').innerHTML = satisfactionHtml;
+
+
+            // --- Part 4: Open-ended Comments ---
+            const commentIndex = 13;
+            const commentCounts = {};
+            
+            rows.forEach(row => {
+                let text = row[commentIndex];
+                if (text && text.trim() !== "" && text.trim() !== "-") {
+                    text = text.trim();
+                    commentCounts[text] = (commentCounts[text] || 0) + 1;
+                }
+            });
+
+            let commentsHtml = "";
+            const sortedComments = Object.entries(commentCounts).sort((a, b) => b[1] - a[1]); // Sort by frequency
+
+            if (sortedComments.length === 0) {
+                commentsHtml = "<li>-</li>";
+            } else {
+                sortedComments.forEach(([text, count]) => {
+                    commentsHtml += `<li>${text} ${count > 1 ? `<span class="font-bold text-blue-600">(${count})</span>` : ''}</li>`;
+                });
+            }
+            document.getElementById('comments-list').innerHTML = commentsHtml;
+        }
+
+        function getColorClass(mean) {
+            if (mean > 4.20) return "text-green-700";
+            if (mean > 3.40) return "text-green-600";
+            if (mean > 2.60) return "text-yellow-600";
+            return "text-red-600";
+        }
+    </script>
+</body>
+</html>
